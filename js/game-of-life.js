@@ -1,12 +1,4 @@
-// 4 or more = die
-// dead with 3 live neighboors = come to life
-// at least 2 live neighboors = survive
-// 0 or 1 neighboors = die
-
-
-console.log('epa')
-
-const gameOfLife = class gameOfLife {
+class gameOfLife {
     constructor(elId, height, width) {
         this.el = document.getElementById(elId);
         this.height = height;
