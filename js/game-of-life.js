@@ -27,7 +27,6 @@ class gameOfLife {
     drawMatrix() {
         return new Promise((resolve) => {
             this.el.innerHTML = '';
-            console.log(this.state);
             this.state.map((row, rowIdx) => {
                 const rowWrapper = document.createElement('div');
                 rowWrapper.setAttribute('id', `row-${rowIdx}`);
@@ -66,9 +65,7 @@ class gameOfLife {
                 } else {
                     this.state[rowIdx][colIdx] = celState;
                 }
-                console.log(`(row, col): ${rowIdx}, ${colIdx} neighB, stateB: ${neighboorsAlive}, ${celState} neighA, stateA: ${this.countNeighboors(this.state, rowIdx, colIdx)}, ${this.state[rowIdx][colIdx]} `);
             }))
-            console.log(this.state);
             resolve();
         })
     }
