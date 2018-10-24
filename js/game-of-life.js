@@ -4,11 +4,19 @@ class gameOfLife {
         this.height = height;
         this.width = width;
         this.matrix = Array.apply(null, Array(height)).map(row => Array.apply(null, Array(width)).map(cel => Math.round(Math.random())))
+        this.speed = 1000;
+        this.isRunning = false;
+        this.count = 1;
+        this.history = [];
         this.drawMatrix();
+        this.echoStatus();
         document.getElementById('take-step-btn').addEventListener('click', this.takeStep.bind(this));
         document.getElementById(elId).addEventListener('click', this.toggleCel.bind(this));
         document.getElementById('run-btn').addEventListener('click', this.run.bind(this));
+        document.getElementById('go-faster-btn').addEventListener('click', this.goFaster.bind(this));
+        document.getElementById('slow-down-btn').addEventListener('click', this.slowDown.bind(this));
         document.getElementById('stop-btn').addEventListener('click', this.stop.bind(this));
+        document.getElementById('kill-all-btn').addEventListener('click', this.killAll.bind(this));
     }
 
     countNeighboors(matrix, rowNumber, colNumber) {
@@ -73,6 +81,12 @@ class gameOfLife {
         })
     }
 
+    echoStatus() {
+        const el = document.getElementById('status');
+        console.log(el);
+        el.innerHTML = `isRunning: ${this.isRunning} | Pace: 1 update / ${this.speed / 1000} Seg | Count: ${this.count}`;
+    }
+
     updateMatrix() {
         return new Promise((resolve) => {
             const previousState = JSON.parse(JSON.stringify(this.matrix));            
@@ -90,17 +104,46 @@ class gameOfLife {
             resolve();
         })
     }
+
+    killAll() {
+        this.matrix = [].concat(this.matrix).map(row => row.map(cel => 0));
+        this.drawMatrix();
+        this.stop();
+    }
     
     takeStep() {
         this.updateMatrix().then(this.drawMatrix());
+        this.echoStatus();
+        this.count++;
     }
 
     run() {
-        this.interval = setInterval(this.takeStep.bind(this), 1000);
+        clearInterval(this.interval);
+        this.interval = setInterval(this.takeStep.bind(this), this.speed);
+        this.isRunning = true;
+        this.echoStatus();
+    }
+
+    goFaster() {
+        this.speed = this.speed - 500;
+        this.echoStatus();
+        if (this.isRunning) {
+            this.run();
+        }
+    }
+
+    slowDown() {
+        this.speed = this.speed + 500;
+        this.echoStatus();
+        if (this.isRunning) {
+            this.run();
+        }
     }
 
     stop() {
         clearInterval(this.interval);
+        this.isRunning = false;
+        this.echoStatus();
     }
 }
 
