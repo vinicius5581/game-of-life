@@ -53,7 +53,7 @@ class gameOfLife {
 
     updateMatrix() {
         return new Promise((resolve) => {
-            const previousState = [].concat(this.matrix);
+            const previousState = JSON.parse(JSON.stringify(this.matrix));
             debugger;
             previousState.map((row, rowIdx) => row.map((col, colIdx) => {
                 const celState = previousState[rowIdx][colIdx];
