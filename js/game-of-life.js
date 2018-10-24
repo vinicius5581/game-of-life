@@ -74,4 +74,4 @@ class gameOfLife {
     }
 }
 
-const newGame = new gameOfLife('gameOfLife', 10, 10);
+const newGame = new gameOfLife('gameOfLife', 20, 20);
