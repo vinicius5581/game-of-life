@@ -6,6 +6,7 @@ class gameOfLife {
         this.matrix = this.matrixGenerator(this.height, this.width, 300);
         this.speed = 1000;
         this.isRunning = false;
+        this.showNeighboorsCount = false;
         this.count = 1;
         this.history = [];
         this.drawMatrix();
@@ -18,6 +19,7 @@ class gameOfLife {
         document.getElementById('stop-btn').addEventListener('click', this.stop.bind(this));
         document.getElementById('kill-all-btn').addEventListener('click', this.killAll.bind(this));
         document.getElementById('go-back-btn').addEventListener('click', this.goBack.bind(this));
+        document.getElementById('toggle-neighboors-btn').addEventListener('click', this.toogleshowNeighboorsCount.bind(this));
     }
 
 
@@ -52,6 +54,11 @@ class gameOfLife {
             }
         }
         return count;
+    }
+
+    toogleshowNeighboorsCount() {
+        this.showNeighboorsCount = !this.showNeighboorsCount;
+        this.drawMatrix();
     }
 
     toggleCel(el) {
@@ -89,7 +96,9 @@ class gameOfLife {
                         celWrapper.classList.remove("alive");
                         celWrapper.classList.add("dead");
                     }
-                    celWrapper.innerHTML = this.countNeighboors(this.matrix, rowIdx, colIdx);
+                    if (this.showNeighboorsCount) {
+                        celWrapper.innerHTML = this.countNeighboors(this.matrix, rowIdx, colIdx);
+                    }                    
                     rowWrapper.appendChild(celWrapper);
                 });
                 this.el.appendChild(rowWrapper);
