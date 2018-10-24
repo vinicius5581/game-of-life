@@ -11,13 +11,15 @@ class gameOfLife {
         document.getElementById('stop-btn').addEventListener('click', this.stop.bind(this));
     }
 
-    countNeighboors(matrix, x,y) {
+    countNeighboors(matrix, rowNumber, colNumber) {
         let count = 0;
         for (let row = -1; row <= 1; row++) {
             for (let col = -1; col <= 1; col++) {
                 if (!(row === 0 && col === 0)) {
-                    if (x > 0 && x < this.width - 1 && y > 0 && y < this.height - 1) {
-                        if(matrix[x + row][y + col] === 1) {
+                    const rowCandidate = rowNumber + row;
+                    const colCandidate = colNumber + col;
+                    if (rowCandidate >= 0 && rowCandidate < this.width  && colCandidate >= 0 && colCandidate < this.height) {
+                        if(matrix[rowCandidate][colCandidate] === 1) {
                             count++;
                         }
                     }                   
