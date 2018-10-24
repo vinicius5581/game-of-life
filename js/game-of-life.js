@@ -3,7 +3,7 @@ class gameOfLife {
         this.el = document.getElementById(elId);
         this.height = height;
         this.width = width;
-        this.matrix = Array.apply(null, Array(height)).map(row => Array.apply(null, Array(width)).map(cel => Math.round(Math.random())))
+        this.matrix = this.matrixGenerator(this.height, this.width, 300);
         this.speed = 1000;
         this.isRunning = false;
         this.count = 1;
@@ -17,6 +17,23 @@ class gameOfLife {
         document.getElementById('slow-down-btn').addEventListener('click', this.slowDown.bind(this));
         document.getElementById('stop-btn').addEventListener('click', this.stop.bind(this));
         document.getElementById('kill-all-btn').addEventListener('click', this.killAll.bind(this));
+        document.getElementById('go-back-btn').addEventListener('click', this.goBack.bind(this));
+    }
+
+
+    matrixGenerator(rows, cols, celsAliveCount) {
+        let count = celsAliveCount;
+        return Array.apply(null, Array(rows)).map(row => Array.apply(null, Array(cols)).map(cel => {
+            const random = Math.round(Math.random());
+            if (count > 0) {
+                if (random === 1) {
+                    count--;
+                }
+                return random;
+            } else {
+                return 0;
+            }
+        }))
     }
 
     countNeighboors(matrix, rowNumber, colNumber) {
@@ -83,13 +100,14 @@ class gameOfLife {
 
     echoStatus() {
         const el = document.getElementById('status');
-        console.log(el);
-        el.innerHTML = `isRunning: ${this.isRunning} | Pace: 1 update / ${this.speed / 1000} Seg | Count: ${this.count}`;
+        el.innerHTML = `isRunning: ${this.isRunning} | Pace: 1 update / ${this.speed / 1000} Seg | Interactions: ${this.count} | Alive: ${this.alive}`;
     }
 
     updateMatrix() {
         return new Promise((resolve) => {
-            const previousState = JSON.parse(JSON.stringify(this.matrix));            
+            const previousState = JSON.parse(JSON.stringify(this.matrix));    
+            this.alive = 0;
+            this.history.push(JSON.stringify(this.matrix));        
             previousState.map((row, rowIdx) => row.map((col, colIdx) => {
                 const celState = previousState[rowIdx][colIdx];
                 const neighboorsAlive = this.countNeighboors(previousState, rowIdx, colIdx);
@@ -97,6 +115,7 @@ class gameOfLife {
                     this.matrix[rowIdx][colIdx] = 0;
                 } else if (!celState && neighboorsAlive === 3) {
                     this.matrix[rowIdx][colIdx] = 1;
+                    this.alive++;
                 } else {
                     this.matrix[rowIdx][colIdx] = celState;
                 }
@@ -106,21 +125,23 @@ class gameOfLife {
     }
 
     killAll() {
-        this.matrix = [].concat(this.matrix).map(row => row.map(cel => 0));
+        this.matrix = this.matrixGenerator(this.height, this.width, 0);
+        this.count = 0;
         this.drawMatrix();
         this.stop();
+        this.echoStatus();
     }
     
     takeStep() {
-        this.updateMatrix().then(this.drawMatrix());
-        this.echoStatus();
         this.count++;
+        this.updateMatrix().then(this.drawMatrix());        
+        this.echoStatus();
     }
 
     run() {
+        this.isRunning = true;
         clearInterval(this.interval);
         this.interval = setInterval(this.takeStep.bind(this), this.speed);
-        this.isRunning = true;
         this.echoStatus();
     }
 
@@ -145,6 +166,15 @@ class gameOfLife {
         this.isRunning = false;
         this.echoStatus();
     }
+
+    goBack() {
+        if (this.history.length) {
+            this.matrix = JSON.parse(this.history.pop());
+            this.drawMatrix();
+            this.count--;
+            this.echoStatus();
+        }        
+    }
 }
 
-const newGame = new gameOfLife('gameOfLife', 30, 30);
+const newGame = new gameOfLife('gameOfLife', 25, 25);
