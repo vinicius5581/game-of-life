@@ -6,6 +6,9 @@ class gameOfLife {
         this.matrix = Array.apply(null, Array(height)).map(row => Array.apply(null, Array(width)).map(cel => Math.round(Math.random())))
         this.drawMatrix();
         document.getElementById('take-step-btn').addEventListener('click', this.takeStep.bind(this));
+        document.getElementById(elId).addEventListener('click', this.toggleCel.bind(this));
+        document.getElementById('run-btn').addEventListener('click', this.run.bind(this));
+        document.getElementById('stop-btn').addEventListener('click', this.stop.bind(this));
     }
 
     countNeighboors(matrix, x,y) {
@@ -22,6 +25,23 @@ class gameOfLife {
             }
         }
         return count;
+    }
+
+    toggleCel(el) {
+        const elId = el.target.id;
+        const row = parseInt(elId.split('').slice(4,6).join(''));
+        const col = parseInt(elId.split('').slice(-2).join(''));
+        this.matrix[row][col] === this.matrix[row][col] ? 0 : 1;
+        const cel = document.getElementById(elId);
+        if (this.matrix[row][col]) {
+            this.matrix[row][col] = 0;
+            cel.classList.remove("alive");
+            cel.classList.add("dead");
+        } else {
+            this.matrix[row][col] = 1;
+            cel.classList.remove("dead");
+            cel.classList.add("alive");
+        }
     }
 
     drawMatrix() {
@@ -72,6 +92,14 @@ class gameOfLife {
     takeStep() {
         this.updateMatrix().then(this.drawMatrix());
     }
+
+    run() {
+        this.interval = setInterval(this.takeStep.bind(this), 1000);
+    }
+
+    stop() {
+        clearInterval(this.interval);
+    }
 }
 
-const newGame = new gameOfLife('gameOfLife', 20, 20);
+const newGame = new gameOfLife('gameOfLife', 30, 30);
