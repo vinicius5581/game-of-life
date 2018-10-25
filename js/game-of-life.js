@@ -20,7 +20,7 @@ class gameOfLife {
         document.getElementById('stop-btn').addEventListener('click', this.stop.bind(this));
         document.getElementById('kill-all-btn').addEventListener('click', this.killAll.bind(this));
         document.getElementById('go-back-btn').addEventListener('click', this.goBack.bind(this));
-        document.getElementById('toggle-neighboors-btn').addEventListener('click', this.toogleshowNeighboorsCount.bind(this));
+        document.getElementById('toggle-neighboors-btn').addEventListener('click', this.toggleshowNeighboorsCount.bind(this));
         this.matrixGenerator = this.matrixGenerator.bind(this);
     }
 
@@ -60,9 +60,8 @@ class gameOfLife {
         return count;
     }
 
-    toogleshowNeighboorsCount() {
-        this.showNeighboorsCount = !this.showNeighboorsCount;
-        this.stop();
+    toggleshowNeighboorsCount() {
+        this.showNeighboorsCount = !this.showNeighboorsCount;        
         this.drawMatrix();
     }
 
@@ -81,6 +80,7 @@ class gameOfLife {
             cel.classList.remove("dead");
             cel.classList.add("alive");
         }
+        this.stop();
     }
 
     drawMatrix() {
