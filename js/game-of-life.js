@@ -3,12 +3,13 @@ class gameOfLife {
         this.el = document.getElementById(elId);
         this.height = height;
         this.width = width;
-        this.matrix = this.matrixGenerator(this.height, this.width, 300);
+        this.alive = 0;
         this.speed = 1000;
         this.isRunning = false;
         this.showNeighboorsCount = false;
         this.count = 1;
         this.history = [];
+        this.matrix = this.matrixGenerator(this.height, this.width, 300);
         this.drawMatrix();
         this.echoStatus();
         document.getElementById('take-step-btn').addEventListener('click', this.takeStep.bind(this));
@@ -20,6 +21,7 @@ class gameOfLife {
         document.getElementById('kill-all-btn').addEventListener('click', this.killAll.bind(this));
         document.getElementById('go-back-btn').addEventListener('click', this.goBack.bind(this));
         document.getElementById('toggle-neighboors-btn').addEventListener('click', this.toogleshowNeighboorsCount.bind(this));
+        this.matrixGenerator = this.matrixGenerator.bind(this);
     }
 
 
@@ -27,8 +29,10 @@ class gameOfLife {
         let count = celsAliveCount;
         return Array.apply(null, Array(rows)).map(row => Array.apply(null, Array(cols)).map(cel => {
             const random = Math.round(Math.random());
+            this.alive = 0;
             if (count > 0) {
                 if (random === 1) {
+                    this.alive++;
                     count--;
                 }
                 return random;
@@ -58,6 +62,7 @@ class gameOfLife {
 
     toogleshowNeighboorsCount() {
         this.showNeighboorsCount = !this.showNeighboorsCount;
+        this.stop();
         this.drawMatrix();
     }
 
@@ -81,6 +86,7 @@ class gameOfLife {
     drawMatrix() {
         return new Promise((resolve) => {
             this.el.innerHTML = '';
+            
             this.matrix.map((row, rowIdx) => {
                 const rowWrapper = document.createElement('div');
                 rowWrapper.setAttribute('id', `row-${rowIdx}`);
@@ -102,7 +108,16 @@ class gameOfLife {
                     rowWrapper.appendChild(celWrapper);
                 });
                 this.el.appendChild(rowWrapper);
-            })            
+            })     
+            
+            if (this.alive === 0) {
+                this.stop();
+            } 
+            const historyLastItemIdx = this.history.length - 1;
+            if (this.history.length > 1 && (this.history[historyLastItemIdx] === this.history[historyLastItemIdx - 1] || this.history[historyLastItemIdx] === this.history[historyLastItemIdx - 2])) {
+                this.stop();
+            }
+                 
             resolve();
         })
     }
@@ -124,9 +139,11 @@ class gameOfLife {
                     this.matrix[rowIdx][colIdx] = 0;
                 } else if (!celState && neighboorsAlive === 3) {
                     this.matrix[rowIdx][colIdx] = 1;
-                    this.alive++;
                 } else {
                     this.matrix[rowIdx][colIdx] = celState;
+                }
+                if (this.matrix[rowIdx][colIdx]) {
+                    this.alive++;
                 }
             }))
             resolve();
