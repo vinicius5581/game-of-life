@@ -67,8 +67,9 @@ class gameOfLife {
 
     toggleCel(el) {
         const elId = el.target.id;
-        const row = parseInt(elId.split('').slice(4,6).join(''));
-        const col = parseInt(elId.split('').slice(-2).join(''));
+        const matches = elId.match(/(row-)(\d{1,2})(-col-)(\d{1,2})/);
+        const row = matches[2]
+        const col = matches[4]
         this.matrix[row][col] === this.matrix[row][col] ? 0 : 1;
         const cel = document.getElementById(elId);
         if (this.matrix[row][col]) {
