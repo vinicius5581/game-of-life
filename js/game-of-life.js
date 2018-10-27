@@ -1,5 +1,6 @@
 class gameOfLife {
-    constructor(elId, height, width) {
+    constructor(elId) {
+        const {width, height} = this.getDimensions();
         this.el = document.getElementById(elId);
         this.height = height;
         this.width = width;
@@ -9,7 +10,7 @@ class gameOfLife {
         this.showNeighboorsCount = false;
         this.count = 1;
         this.history = [];
-        this.matrix = this.matrixGenerator(this.height, this.width, 300);
+        this.matrix = this.matrixGenerator(this.height, this.width, height * width / 2);
         this.drawMatrix();
         this.echoStatus();
         document.getElementById('take-step-btn').addEventListener('click', this.takeStep.bind(this));
@@ -22,8 +23,22 @@ class gameOfLife {
         document.getElementById('go-back-btn').addEventListener('click', this.goBack.bind(this));
         document.getElementById('toggle-neighboors-btn').addEventListener('click', this.toggleshowNeighboorsCount.bind(this));
         this.matrixGenerator = this.matrixGenerator.bind(this);
+
+        
     }
 
+    getDimensions() {
+        const innerWidth = window.innerWidth;
+        const innerHeight = window.innerHeight;
+        const headerHeight = document.getElementById('app-header').offsetHeight;
+        const footerHeight = document.getElementById('app-footer').offsetHeight;
+        // return {innerWidth, innerHeight, headerHeight, footerHeight}
+        const width = Math.floor(innerWidth / 3);
+        const height = Math.floor(innerHeight/3) - headerHeight - footerHeight;
+        console.log(`w,h: ${width}, ${height}`)
+        return {width, height}
+    }
+    
 
     matrixGenerator(rows, cols, celsAliveCount) {
         let count = celsAliveCount;
@@ -43,13 +58,14 @@ class gameOfLife {
     }
 
     countNeighboors(matrix, rowNumber, colNumber) {
+        debugger;
         let count = 0;
         for (let row = -1; row <= 1; row++) {
             for (let col = -1; col <= 1; col++) {
                 if (!(row === 0 && col === 0)) {
                     const rowCandidate = rowNumber + row;
                     const colCandidate = colNumber + col;
-                    if (rowCandidate >= 0 && rowCandidate < this.width  && colCandidate >= 0 && colCandidate < this.height) {
+                    if (rowCandidate >= 0 && rowCandidate < this.height  && colCandidate >= 0 && colCandidate < this.width) {
                         if(matrix[rowCandidate][colCandidate] === 1) {
                             count++;
                         }
@@ -66,8 +82,9 @@ class gameOfLife {
     }
 
     toggleCel(el) {
+        debugger;
         const elId = el.target.id;
-        const matches = elId.match(/(row-)(\d{1,2})(-col-)(\d{1,2})/);
+        const matches = elId.match(/(row-)(\d{1,4})(-col-)(\d{1,4})/);
         const row = matches[2]
         const col = matches[4]
         this.matrix[row][col] === this.matrix[row][col] ? 0 : 1;
@@ -204,4 +221,6 @@ class gameOfLife {
     }
 }
 
-const newGame = new gameOfLife('gameOfLife', 25, 25);
+
+
+const newGame = new gameOfLife('gameOfLife', 200, 420);
