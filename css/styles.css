@@ -10,8 +10,8 @@ body {
 .cel {
     box-sizing: border-box;
     border: 1px solid black;
-    height: 3px;
-    width: 3px;
+    height: 4px;
+    width: 4px;
     color: grey;
     display: flex;
     justify-content: center;

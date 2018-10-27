@@ -33,8 +33,8 @@ class gameOfLife {
         const headerHeight = document.getElementById('app-header').offsetHeight;
         const footerHeight = document.getElementById('app-footer').offsetHeight;
         // return {innerWidth, innerHeight, headerHeight, footerHeight}
-        const width = Math.floor(innerWidth / 3);
-        const height = Math.floor(innerHeight/3) - headerHeight - footerHeight;
+        const width = Math.floor(innerWidth / 4);
+        const height = Math.floor((innerHeight - headerHeight - footerHeight - 10) / 4);
         console.log(`w,h: ${width}, ${height}`)
         return {width, height}
     }
