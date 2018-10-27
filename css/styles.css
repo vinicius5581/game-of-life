@@ -3,6 +3,10 @@ body {
     color: white;
 }
 
+header {
+    display: flex;
+}
+
 .row {
     display: flex;
 }

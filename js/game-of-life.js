@@ -1,18 +1,28 @@
+const BLINKER = JSON.stringify([[1],[1],[1]]);
+const SQUARE = JSON.stringify([[1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1]]);
+const LIGHTWEIGHT_SPACESHIP = JSON.stringify([[0,1,1,0,0],[1,1,1,1,0],[1,1,0,1,1],[0,0,1,1,0]]);
+const GLIDER = JSON.stringify([[1,0,1],[0,1,1],[0,1,0]]);
+
+const SHAPES = [
+    {label: 'Vertical Blinker', value: BLINKER},
+    {label: 'Square', value: SQUARE},
+    {label: 'Lightweight Spaceship', value: LIGHTWEIGHT_SPACESHIP},
+    {label: 'Glider', value: GLIDER}
+];
+
+
 class gameOfLife {
-    constructor(elId) {
+    constructor(elId, customWidth, customHeight) {
         const {width, height} = this.getDimensions();
         this.el = document.getElementById(elId);
-        this.height = height;
-        this.width = width;
+        this.height = customHeight || height;
+        this.width = customWidth || width;
         this.alive = 0;
-        this.speed = 1000;
+        this.speed = 500;
         this.isRunning = false;
         this.showNeighboorsCount = false;
         this.count = 1;
-        this.history = [];
-        this.matrix = this.matrixGenerator(this.height, this.width, height * width / 2);
-        this.drawMatrix();
-        this.echoStatus();
+        this.history = [];        
         document.getElementById('take-step-btn').addEventListener('click', this.takeStep.bind(this));
         document.getElementById(elId).addEventListener('click', this.toggleCel.bind(this));
         document.getElementById('run-btn').addEventListener('click', this.run.bind(this));
@@ -20,11 +30,62 @@ class gameOfLife {
         document.getElementById('slow-down-btn').addEventListener('click', this.slowDown.bind(this));
         document.getElementById('stop-btn').addEventListener('click', this.stop.bind(this));
         document.getElementById('kill-all-btn').addEventListener('click', this.killAll.bind(this));
+        document.getElementById('generate-random').addEventListener('click', this.generateRandom.bind(this));
         document.getElementById('go-back-btn').addEventListener('click', this.goBack.bind(this));
         document.getElementById('toggle-neighboors-btn').addEventListener('click', this.toggleshowNeighboorsCount.bind(this));
+        document.getElementById('draw-input-form').addEventListener('submit', this.handleDrawInputForm.bind(this));
         this.matrixGenerator = this.matrixGenerator.bind(this);
+        this.generateRandom = this.generateRandom.bind(this);
+        this.matrix = this.matrixGenerator(this.height, this.width, 0);
+        this.drawMatrix();
+        this.populateShapes();
+        this.drawShape(10,10, LIGHTWEIGHT_SPACESHIP);        
+        this.drawShape(25,10, GLIDER);   
+        this.drawShape(100,20, GLIDER);   
+        this.run();
+        this.echoStatus();
+    }
 
-        
+    generateRandom() {
+        this.killAll();
+        this.matrix = this.matrixGenerator(this.height, this.width, this.height * this.width / 2);
+        this.drawMatrix();
+    }
+
+    populateShapes(){
+        const select = document.getElementById('draw-input-select');
+        SHAPES.map(shape => {
+            const option = document.createElement("option");
+            option.text = shape.label;
+            option.value = shape.value;
+            select.appendChild(option);
+        })
+    }
+
+    handleDrawInputForm(e) {
+        e.preventDefault();
+        const top = document.getElementById('draw-input-top').value;
+        const left = document.getElementById('draw-input-left').value;
+        const shape = document.getElementById('draw-input-select').options[document.getElementById('draw-input-select').selectedIndex].value;
+        this.drawShape(top, left, shape);
+    }
+
+    drawShape(top, left, shape) {
+        const matrix = JSON.parse(JSON.stringify(this.matrix));
+        const shapeObj = JSON.parse(shape);
+        const leftValue = parseInt(left);
+        const topValue = parseInt(top);
+        const right = leftValue + shapeObj[0].length - 1;
+        const bottom = topValue + shapeObj.length - 1;        
+        this.matrix = matrix.map((row, rowIdx) => row.map((col, colIdx) => {
+            if (rowIdx >= topValue && rowIdx <= bottom) {
+                if (colIdx >= leftValue && colIdx <= right) {
+                    return shapeObj[rowIdx - topValue][colIdx - leftValue];
+                }
+            }
+            return matrix[rowIdx][colIdx];;
+        }));
+        this.drawMatrix();
     }
 
     getDimensions() {
@@ -58,7 +119,6 @@ class gameOfLife {
     }
 
     countNeighboors(matrix, rowNumber, colNumber) {
-        debugger;
         let count = 0;
         for (let row = -1; row <= 1; row++) {
             for (let col = -1; col <= 1; col++) {
@@ -82,7 +142,6 @@ class gameOfLife {
     }
 
     toggleCel(el) {
-        debugger;
         const elId = el.target.id;
         const matches = elId.match(/(row-)(\d{1,4})(-col-)(\d{1,4})/);
         const row = matches[2]
@@ -222,5 +281,4 @@ class gameOfLife {
 }
 
 
-
-const newGame = new gameOfLife('gameOfLife', 200, 420);
+const GAME_OF_LIFE = new gameOfLife('gameOfLife');
