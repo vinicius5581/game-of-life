@@ -50,6 +50,7 @@ class gameOfLife {
         this.killAll();
         this.matrix = this.matrixGenerator(this.height, this.width, this.height * this.width / 2);
         this.drawMatrix();
+        this.run();
     }
 
     populateShapes(){
