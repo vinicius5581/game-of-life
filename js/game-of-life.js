@@ -41,9 +41,13 @@ class gameOfLife {
         this.matrix = this.matrixGenerator(this.height, this.width, 0);
         this.drawMatrix();
         this.populateShapes();
-        this.drawShape(10,10, LIGHTWEIGHT_SPACESHIP);        
-        this.drawShape(25,10, GLIDER);   
-        this.drawShape(100,20, GLIDER);   
+        this.drawShape(0,0, LIGHTWEIGHT_SPACESHIP);                
+        this.drawShape(10,10, PULSAR);   
+        this.drawShape(10,50, PULSAR);   
+        this.drawShape(50,10, PULSAR);   
+        this.drawShape(50,50, PULSAR);   
+        this.drawShape(30,30, PULSAR);   
+        this.drawShape(70,0, LIGHTWEIGHT_SPACESHIP);  
         this.run();
         this.echoStatus();
     }
@@ -95,11 +99,9 @@ class gameOfLife {
         const innerWidth = window.innerWidth;
         const innerHeight = window.innerHeight;
         const headerHeight = document.getElementById('app-header').offsetHeight;
-        const footerHeight = document.getElementById('app-footer').offsetHeight;
-        // return {innerWidth, innerHeight, headerHeight, footerHeight}
-        const width = Math.floor(innerWidth / 4);
-        const height = Math.floor((innerHeight - headerHeight - footerHeight - 10) / 4);
-        console.log(`w,h: ${width}, ${height}`)
+        const footerHeight = document.getElementById('app-footer').offsetHeight;        
+        const width = Math.floor(innerWidth / 5);
+        const height = Math.floor((innerHeight - headerHeight - footerHeight - 10) / 5);
         return {width, height}
     }
     

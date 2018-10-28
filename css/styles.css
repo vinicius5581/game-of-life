@@ -5,6 +5,13 @@ body {
 
 header {
     display: flex;
+    justify-content: space-between;
+    vertical-align: center;
+}
+
+header div {
+    display: flex;
+    vertical-align: center;
 }
 
 .row {
@@ -14,8 +21,8 @@ header {
 .cel {
     box-sizing: border-box;
     border: 1px solid black;
-    height: 4px;
-    width: 4px;
+    height: 5px;
+    width: 5px;
     color: grey;
     display: flex;
     justify-content: center;
@@ -24,10 +31,20 @@ header {
     font-size: 5px;
 }
 
+input {
+    width: 20px;
+}
+
+
 .alive {
     background: white;
 }
 
 .dead {
     background: black;
+}
+
+footer {
+    display: flex;
+    justify-content: center;
 }

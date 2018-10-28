@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Game of life</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://use.fontawesome.com/baa18536ef.js"></script>
     <link rel="stylesheet" type="text/css" media="screen" href="./css/styles.css" />
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-128092423-1"></script>
@@ -18,21 +19,25 @@
 </head>
 <body>
     <header id='app-header'>
-        <button id='go-back-btn'>Step back</button>
-        <button id='take-step-btn'>Step forward</button>
-        <button id='run-btn'>Run</button>
-        <button id='go-faster-btn'>Go faster</button>
-        <button id='slow-down-btn'>Slow down</button>
-        <button id='stop-btn'>Stop</button>
-        <button id='kill-all-btn'>Kill all</button>        
-        <button id='toggle-neighboors-btn'>View neighboors count</button>        
-        <form id='draw-input-form'>
-            <select id='draw-input-select'></select>
-            <input id='draw-input-top' placeholder="top"/>
-            <input id='draw-input-left' placeholder="left"/>
-            <button>Draw</button>
-        </form>
-        <button id='generate-random'>Random</button>
+        <div>   
+            <button id='go-back-btn'>Back</button>
+            <button id='take-step-btn'>Step</button>
+            <button id='run-btn'>Run</button>
+            <button id='go-faster-btn'>Faster</button>
+            <button id='slow-down-btn'>Slower</button>
+            <button id='stop-btn'>Stop</button>
+        </div>
+        <div>                                    
+            <form id='draw-input-form'>
+                <select id='draw-input-select'></select>
+                <input id='draw-input-top' placeholder="top"/>
+                <input id='draw-input-left' placeholder="left"/>
+                <button>Draw</button>
+            </form>
+            <button id='generate-random'>Random</button>
+            <button id='kill-all-btn'>Kill all</button>    
+        </div>        
+        <button id='toggle-neighboors-btn'>View neighboors count</button>
     </header>
             
     <div id='gameOfLife'></div>
